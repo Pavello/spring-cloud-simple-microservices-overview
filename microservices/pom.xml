@@ -20,5 +20,12 @@
 		<module>orders-service</module>
 	</modules>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
 
 </project>
