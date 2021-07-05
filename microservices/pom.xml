@@ -18,6 +18,7 @@
 	<modules>
 		<module>basket-service</module>
 		<module>orders-service</module>
+		<module>basket-service-cloud</module>
 	</modules>
 
 	<dependencies>
