@@ -11,11 +11,13 @@ import org.springframework.cloud.loadbalancer.core.ServiceInstanceListSupplier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import reactor.core.publisher.Flux;
 
 @Configuration
+@Profile("!consul")
 @LoadBalancerClient(value = "order-service", configuration = InstancesProviderConfig.class)
 public class InstancesProviderConfig {
 
