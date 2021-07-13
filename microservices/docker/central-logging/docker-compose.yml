@@ -1,0 +1,45 @@
+version: "3.8"
+services:
+  graylog:
+    image: graylog/graylog:${GRAYLOG_IMAGE_VERSION}
+    environment:
+      - GRAYLOG_HTTP_EXTERNAL_URI=http://localhost:9000/
+      # CHANGE ME (must be at least 16 characters)!
+      - GRAYLOG_PASSWORD_SECRET=somepasswordpepper
+      # Password: admin
+      - GRAYLOG_ROOT_PASSWORD_SHA2=8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+    ports:
+      # Graylog web interface and REST API
+      - 9000:9000
+      # Syslog TCP
+      - 1514:1514
+      # Syslog UDP
+      - 1514:1514/udp
+      # GELF TCP
+      - 12201:12201
+      # GELF UDP
+      - 12201:12201/udp
+    depends_on:
+      - mongo
+      - elasticsearch
+  mongo:
+    image: mongo:${MONGODB_IMAGE_VERSION}
+    volumes:
+      - mongo-data:/data/db
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELASTICSEARCH_IMAGE_VERSION}
+    environment:
+      - "ES_JAVA_OPTS=-Xms256m -Xmx512m"
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - bootstrap.memory_lock=true
+    volumes:
+      - elastic-data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    ulimits:
+      memlock: -1
+
+volumes:
+  mongo-data:
+  elastic-data:
