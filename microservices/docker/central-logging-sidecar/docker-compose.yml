@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  graylog-sidecar:
+    build: .
+    environment:
+      - GS_SERVER_URL=${GS_SERVER_URL}
+      - GS_NODE_ID=a-unique-id
+      - GS_SERVER_API_TOKEN=${GS_SERVER_API_TOKEN}
+      - GS_LIST_LOG_FILES=/var/log/app
+      - GS_UPDATE_INTERVAL=3
+      - GS_LOG_PATH=/var/log
+    volumes:
+      - ./logs:/var/log/app
+
+networks:
+  default:
+    external:
+      name: central-logging_default
