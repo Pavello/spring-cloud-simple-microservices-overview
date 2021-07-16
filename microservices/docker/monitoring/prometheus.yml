@@ -1,0 +1,21 @@
+scrape_configs:
+  - job_name: basket-service-static
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets:
+          - host.docker.internal:8084
+        labels:
+          application: basket-service
+
+  - job_name: consul-services
+    scrape_interval: 5s
+    metrics_path: /actuator/prometheus
+    consul_sd_configs:
+      - server: host.docker.internal:8500
+        refresh_interval: 10s
+    relabel_configs:
+      - source_labels: [ __meta_consul_tags ]
+        regex: '.*?,application=([^,]+),.*?'
+        replacement: '${1}'
+        target_label: 'application'

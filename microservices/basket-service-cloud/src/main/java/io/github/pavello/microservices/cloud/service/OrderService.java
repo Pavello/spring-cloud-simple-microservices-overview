@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RequiredArgsConstructor
@@ -27,9 +28,6 @@ public class OrderService {
 				.build();
 
 		return webClient
-				.filters(exchangeFilterFunctions ->
-					exchangeFilterFunctions.add(logRequest())
-				)
 				.build()
 				.post()
 				.uri("http://order-service/orders")
@@ -39,19 +37,6 @@ public class OrderService {
 				.bodyToMono(Response.class)
 				.map(Response::getOrderId)
 				.timeout(timeout);
-	}
-
-	ExchangeFilterFunction logRequest() {
-		return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {
-			if (log.isDebugEnabled()) {
-				StringBuilder sb = new StringBuilder("Request: \n");
-				//append clientRequest method and url
-				clientRequest
-						.headers();
-				log.debug(sb.toString());
-			}
-			return Mono.just(clientRequest);
-		});
 	}
 
 	@Data
